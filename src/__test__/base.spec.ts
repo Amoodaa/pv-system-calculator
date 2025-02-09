@@ -1,18 +1,90 @@
+import { PV } from "../PV";
+
 describe("Basic creation of PV modules", () => {
-  test.todo("Create a single PV, with a identifier, can be number or string");
-  test.todo("Create a single PV, with I=1A, V=40v");
-  test.todo("Create a single PV, with I=10.96A, V=45v");
-  test.todo("Create a single PV, with I=10A, V=36.6v");
+  test("Create a single PV, with automatically created identifier", () => {
+    const pv1 = new PV(25, 1);
+
+    expect(pv1.name).toBe("PV 1");
+  });
+
+  test("Create a single PV, with passed in identifier", () => {
+    const pv1 = new PV(25, 1, "PV01");
+
+    expect(pv1.name).toBe("PV01");
+  });
+
+  test("Create a single PV, with I=1A, V=40v", () => {
+    const pv1 = new PV(40, 1);
+
+    expect(pv1.voltage).toBe(40);
+    expect(pv1.current).toBe(1);
+  });
+  test("Create a single PV, with I=10.96A, V=45v", () => {
+    const pv1 = new PV(45, 10.96);
+
+    expect(pv1.voltage).toBe(45);
+    expect(pv1.current).toBe(10.96);
+  });
+  test("Create a single PV, with I=10A, V=36.6v", () => {
+    const pv1 = new PV(36.6, 10);
+
+    expect(pv1.voltage).toBe(36.6);
+    expect(pv1.current).toBe(10);
+  });
 
   describe("Modules support useful properties", () => {
-    test.todo(
-      "PV.toString method to print it in a single line, not serialized json"
-    );
-    test.todo("I: gets the module's current I in Amperes 'A'");
-    test.todo("V: gets the module's voltage V in Volts 'V'");
-    test.todo(
-      "P: gets the module's Pmax which is total power in Watts 'W' (P = I * V) (both values @ max)"
-    );
+    test("i: gets the module's current I in Amperes 'A'", () => {
+      const pv = new PV(40, 10);
+      expect(pv.i).toBe("10a");
+    });
+
+    test("a: gets the module's current I in Amperes 'A'", () => {
+      const pv = new PV(40, 10);
+      expect(pv.a).toBe("10a");
+    });
+
+    test("v: gets the module's voltage V in Volts 'V'", () => {
+      const pv = new PV(40, 10);
+      expect(pv.v).toBe("40v");
+    });
+
+    test("w: gets the module's Pmax which is total power in Watts 'W' (P = I * V) (both values @ max)", () => {
+      const pv = new PV(40, 10);
+      expect(pv.w).toBe("400w");
+    });
+
+    describe("toString: base and extended behavior", () => {
+      test("input: `name: true` => default value", () => {
+        const pv1 = new PV(40, 1);
+        const expectedToStringValue = `${pv1.name}`;
+        expect(pv1.toString()).toBe(expectedToStringValue);
+        expect(String(pv1)).toBe(expectedToStringValue);
+      });
+
+      test("input: `name: false` doesn't return anything", () => {
+        const pv1 = new PV(40, 1);
+        const expectedToStringValue = ``;
+        expect(pv1.toString({ name: false })).toBe(expectedToStringValue);
+      });
+
+      test("input: `a: true`", () => {
+        const pv1 = new PV(40, 1);
+        const expectedToStringValue = `${pv1.name} ${pv1.a}`;
+        expect(pv1.toString({ a: true })).toBe(expectedToStringValue);
+      });
+
+      test("input: `v: true`", () => {
+        const pv1 = new PV(40, 1);
+        const expectedToStringValue = `${pv1.name} ${pv1.v}`;
+        expect(pv1.toString({ v: true })).toBe(expectedToStringValue);
+      });
+
+      test("input: `w: true`", () => {
+        const pv1 = new PV(40, 1);
+        const expectedToStringValue = `${pv1.name} ${pv1.w}`;
+        expect(pv1.toString({ w: true })).toBe(expectedToStringValue);
+      });
+    });
   });
 });
 
