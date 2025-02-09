@@ -1,4 +1,5 @@
 import { PV } from "../PV";
+import { PVSeries } from "../PVSeries";
 
 describe("Basic creation of PV modules", () => {
   test("Create a single PV, with automatically created identifier", () => {
@@ -99,16 +100,21 @@ describe("Validation when creating PV modules", () => {
 });
 
 describe("Basic creation of PV Series module", () => {
-  test.todo("Create Series of 3 PV modules");
-  test.todo(
-    "Create Series of 3 PV modules, where their collective V is a sum of V of submodules"
-  );
-  test.todo(
-    "Create Series of 3 PV modules, where their collective I is a min of I of submodules"
-  );
-  test.todo(
-    "Create Series of 3 PV modules where their Pmax is calculated accordingly"
-  );
+  test("Create Series of 3 PV modules", () => {
+    const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+    const series = new PVSeries(modules);
+
+    expect(series.name).toBe("PVSeries 1");
+  });
+  test("Create Series of 3 PV modules, where their collective V is a sum of V of submodules", () => {
+    expect.hasAssertions();
+  });
+  test("Create Series of 3 PV modules, where their collective I is a min of I of submodules", () => {
+    expect.hasAssertions();
+  });
+  test("Create Series of 3 PV modules where their Pmax is calculated accordingly", () => {
+    expect.hasAssertions();
+  });
   describe("Series modules support all same properties of base modules", () => {
     test.todo("toString");
     test.todo("I");
