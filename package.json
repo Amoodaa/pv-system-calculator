@@ -1,12 +1,21 @@
 {
   "name": "pv-system-calculator",
+  "packageManager": "yarn@4.6.0",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^22.13.1",
     "jest": "30.0.0-alpha.7",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@types/jest": "^29.5.14"
   }
 }
