@@ -18,6 +18,10 @@ export class PV {
     this.name = name;
   }
 
+  public get power() {
+    return this.voltage * this.current;
+  }
+
   public get v() {
     return `${this.voltage}v`;
   }
@@ -31,7 +35,7 @@ export class PV {
   }
 
   public get w() {
-    return `${this.voltage * this.current}w`;
+    return `${this.power}w`;
   }
 
   // to Strings
@@ -41,7 +45,7 @@ export class PV {
 
   public toString = this._toString;
 
-  private _toString({ name = true, a = false, v = false, w = false } = {}) {
+  protected _toString({ name = true, a = false, v = false, w = false } = {}) {
     const order = { name, a, v, w } as const;
 
     return Object.entries(order)

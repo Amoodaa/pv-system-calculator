@@ -34,6 +34,10 @@ describe("Basic creation of PV modules", () => {
   });
 
   describe("Modules support useful properties", () => {
+    test("power: gets the module's power in number", () => {
+      const pv = new PV(40, 10);
+      expect(pv.power).toBe(400);
+    });
     test("i: gets the module's current I in Amperes 'A'", () => {
       const pv = new PV(40, 10);
       expect(pv.i).toBe("10a");
@@ -106,20 +110,67 @@ describe("Basic creation of PV Series module", () => {
 
     expect(series.name).toBe("PVSeries 1");
   });
+
   test("Create Series of 3 PV modules, where their collective V is a sum of V of submodules", () => {
-    expect.hasAssertions();
+    const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+    const series = new PVSeries(modules);
+
+    expect(series.voltage).toBe(120);
   });
+
   test("Create Series of 3 PV modules, where their collective I is a min of I of submodules", () => {
-    expect.hasAssertions();
+    const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+    const series = new PVSeries(modules);
+
+    expect(series.current).toBe(10);
   });
+
   test("Create Series of 3 PV modules where their Pmax is calculated accordingly", () => {
-    expect.hasAssertions();
+    const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+    const series = new PVSeries(modules);
+
+    expect(series.power).toBe(1200);
   });
+
   describe("Series modules support all same properties of base modules", () => {
-    test.todo("toString");
-    test.todo("I");
-    test.todo("V");
-    test.todo("P");
+    test("modules exist and is accessible", () => {
+      const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+      const series = new PVSeries(modules, "PV Series 0001");
+
+      expect(series.modules).toEqual(modules);
+    });
+
+    test("toString input: modules: true", () => {
+      const modules = [
+        new PV(40, 10, "PV 1"),
+        new PV(40, 10, "PV 2"),
+        new PV(40, 10, "PV 3"),
+      ];
+      const series = new PVSeries(modules, "PV Series 0001");
+
+      expect(series.toString({ modules: true })).toEqual(
+        "PV Series 0001 [PV 1, PV 2, PV 3]"
+      );
+    });
+
+    test("toString input: modules: true, passes the other super arguments down to the rest of modules", () => {
+      const modules = [
+        new PV(40, 10, "PV 1"),
+        new PV(40, 10, "PV 2"),
+        new PV(40, 10, "PV 3"),
+      ];
+      const series = new PVSeries(modules, "PV Series 0001");
+
+      expect(series.toString({ modules: true, a: true })).toEqual(
+        "PV Series 0001 10a [PV 1 10a, PV 2 10a, PV 3 10a]"
+      );
+      expect(series.toString({ modules: true, v: true })).toEqual(
+        "PV Series 0001 120v [PV 1 40v, PV 2 40v, PV 3 40v]"
+      );
+      expect(series.toString({ modules: true, w: true })).toEqual(
+        "PV Series 0001 1200w [PV 1 400w, PV 2 400w, PV 3 400w]"
+      );
+    });
   });
 });
 

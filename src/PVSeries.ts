@@ -29,4 +29,27 @@ export class PVSeries extends PV {
     );
     this.modules = modules;
   }
+
+  // to Strings
+  get [Symbol.toStringTag]() {
+    return this._toString();
+  }
+
+  public toString = this._toString;
+
+  // this exists to help with typing and to allow for overriding
+  private super_toString = super._toString;
+
+  override _toString({
+    modules = false,
+    ...superArgs
+  }: Parameters<typeof this.super_toString>[0] & { modules?: boolean } = {}) {
+    const baseStr = this.super_toString(superArgs);
+    return modules
+      ? `${baseStr} [${this.modules
+          .map((m) => m.toString(superArgs))
+          .filter(Boolean)
+          .join(", ")}]`
+      : baseStr;
+  }
 }
