@@ -1,3 +1,4 @@
+import { PVParallel } from "../PVParallel";
 import { PV } from "../PV";
 import { PVSeries } from "../PVSeries";
 
@@ -175,21 +176,78 @@ describe("Basic creation of PV Series module", () => {
 });
 
 describe("Basic creation of PV Parallel module", () => {
-  test.todo("Create Parallel of 3 PV modules");
-  test.todo(
-    "Create Parallel of 3 PV modules, where their collective V is a min of V of submodules"
-  );
-  test.todo(
-    "Create Parallel of 3 PV modules, where their collective I is a sum of I of submodules"
-  );
-  test.todo(
-    "Create Parallel of 3 PV modules where their Pmax is calculated accordingly"
-  );
+  test("Create Parallel of 3 PV modules", () => {
+    const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+    const parallel = new PVParallel(modules);
+    expect(parallel.name).toBe("PVParallel 1");
+  });
+  test("Create Parallel of 3 PV modules, where their collective V is a min of V of submodules", () => {
+    const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+    const parallel = new PVParallel(modules);
+
+    expect(parallel.voltage).toBe(40);
+  });
+  test("Create Parallel of 3 PV modules, where their collective I is a sum of I of submodules", () => {
+    const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+    const parallel = new PVParallel(modules);
+
+    expect(parallel.current).toBe(30);
+  });
+  test("Create Parallel of 3 PV modules where their Pmax is calculated accordingly", () => {
+    const modules = [new PV(40, 10), new PV(40, 10), new PV(40, 10)];
+    const parallel = new PVParallel(modules);
+
+    expect(parallel.power).toBe(1200);
+  });
   describe("Parallel modules support all same properties of base modules", () => {
-    test.todo("toString");
-    test.todo("I");
-    test.todo("V");
-    test.todo("P");
+    test("toString", () => {
+      const modules = [
+        new PV(40, 10, "PV 1"),
+        new PV(40, 10, "PV 2"),
+        new PV(40, 10, "PV 3"),
+      ];
+      const parallel = new PVParallel(modules, "PV Parallel 0001");
+
+      expect(parallel.toString({ modules: true })).toEqual(
+        "PV Parallel 0001 [PV 1, PV 2, PV 3]"
+      );
+    });
+    test("I", () => {
+      const modules = [
+        new PV(40, 10, "PV 1"),
+        new PV(40, 10, "PV 2"),
+        new PV(40, 10, "PV 3"),
+      ];
+      const parallel = new PVParallel(modules, "PV Parallel 0001");
+
+      expect(parallel.toString({ modules: true, a: true })).toEqual(
+        "PV Parallel 0001 30a [PV 1 10a, PV 2 10a, PV 3 10a]"
+      );
+    });
+    test("V", () => {
+      const modules = [
+        new PV(40, 10, "PV 1"),
+        new PV(40, 10, "PV 2"),
+        new PV(40, 10, "PV 3"),
+      ];
+      const parallel = new PVParallel(modules, "PV Parallel 0001");
+
+      expect(parallel.toString({ modules: true, v: true })).toEqual(
+        "PV Parallel 0001 40v [PV 1 40v, PV 2 40v, PV 3 40v]"
+      );
+    });
+    test("P", () => {
+      const modules = [
+        new PV(40, 10, "PV 1"),
+        new PV(40, 10, "PV 2"),
+        new PV(40, 10, "PV 3"),
+      ];
+      const parallel = new PVParallel(modules, "PV Parallel 0001");
+
+      expect(parallel.toString({ modules: true, w: true })).toEqual(
+        "PV Parallel 0001 1200w [PV 1 400w, PV 2 400w, PV 3 400w]"
+      );
+    });
   });
 });
 
